@@ -22,10 +22,11 @@ Overlay Techniques: Uses image processing techniques to correctly position and s
 User Interaction:
 
 Allows users to select different garments or accessories to try on. Interaction can be facilitated through gesture recognition or UI buttons.
+
 Detailed Explanation of the Provided Code
+
 Libraries and Initialization
-python
-Copy code
+
 import os
 import cvzone
 import cv2
@@ -33,12 +34,13 @@ from cvzone.PoseModule import PoseDetector
 
 cap = cv2.VideoCapture("Resources/Videos/1.mp4")
 detector = PoseDetector()
+
 cv2 for video capture and image processing.
 cvzone for simplified computer vision tasks, including pose detection.
 PoseDetector to identify and track body landmarks in the video.
+
 Loading Resources
-python
-Copy code
+
 shirtFolderPath = "Resources/Shirts"
 listShirts = os.listdir(shirtFolderPath)
 fixedRatio = 262 / 190
@@ -49,21 +51,24 @@ imgButtonLeft = cv2.flip(imgButtonRight, 1)
 counterRight = 0
 counterLeft = 0
 selectionSpeed = 10
+
 Loads available shirt images.
 Defines ratios for resizing shirts based on body landmark distances.
 Loads button images for user interaction (next and previous shirt).
+
+
 Main Loop for Video Processing
-python
-Copy code
+
 while True:
     success, img = cap.read()
     img = detector.findPose(img)
     lmList, bboxInfo = detector.findPosition(img, bboxWithHands=False, draw=False)
+
 Captures each frame from the video.
 Detects pose and landmarks using PoseDetector.
+
 Shirt Overlay Logic
-python
-Copy code
+
     if lmList:
         lm11 = lmList[11][1:3]
         lm12 = lmList[12][1:3]
@@ -78,12 +83,12 @@ Copy code
             img = cvzone.overlayPNG(img, imgShirt, (lm12[0] - offset[0], lm12[1] - offset[1]))
         except:
             pass
+
 Calculates the shirt's width based on the distance between shoulder landmarks (lm11 and lm12).
 Resizes the shirt image accordingly.
 Uses cvzone.overlayPNG to overlay the shirt image onto the video frame at the calculated position.
+
 User Interaction for Shirt Selection
-python
-Copy code
         img = cvzone.overlayPNG(img, imgButtonRight, (1074, 293))
         img = cvzone.overlayPNG(img, imgButtonLeft, (72, 293))
 
@@ -107,12 +112,22 @@ Copy code
         else:
             counterRight = 0
             counterLeft = 0
+
 Overlays navigation buttons for shirt selection.
 Checks for hand positions to increase counters for shirt selection.
 Changes the shirt image based on user interaction (hand positions).
+
 Displaying the Result
-python
-Copy code
     cv2.imshow("Image", img)
     cv2.waitKey(1)
+
 Displays the processed video frame with the overlaid shirt and interaction buttons.
+
+
+This code demonstrates the basic functionality of a virtual try-on system using pose detection and image overlay techniques. The user can see how different shirts look on them in real-time, and interact with the system to change the shirts. Advanced versions of such platforms may include more sophisticated pose detection, 3D modeling, better user interaction methods, and integration with e-commerce systems for a complete virtual shopping experience.
+
+
+
+
+
+
